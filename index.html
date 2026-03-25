@@ -29,7 +29,13 @@
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{background:linear-gradient(180deg,var(--bg),#06100a 60%, #08140d);color:var(--text);font-family:'Inter',sans-serif;min-height:100%}
+    html,body{
+      background:linear-gradient(180deg,var(--bg),#06100a 60%, #08140d);
+      color:var(--text);
+      font-family:'Inter',sans-serif;
+      min-height:100%;
+    }
+
     body::before{
       content:'';
       position:fixed;
@@ -137,11 +143,16 @@
       margin-bottom:10px;
     }
 
-    .subtext{
+    .status{
+      margin-top:8px;
       font-size:12px;
-      line-height:1.6;
       color:var(--muted);
+      line-height:1.55;
     }
+
+    .status.ok{color:var(--green)}
+    .status.warn{color:var(--yellow)}
+    .status.err{color:var(--red)}
 
     .grid{
       display:grid;
@@ -167,6 +178,24 @@
     .input:focus, .select:focus, .textarea:focus{
       border-color:var(--green);
       box-shadow:0 0 0 3px rgba(57,217,138,.12);
+    }
+
+    .select{
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-color: rgba(255,255,255,.02);
+      color: var(--text);
+    }
+
+    .select option{
+      background: #102219;
+      color: #edf7ef;
+    }
+
+    select:focus option:checked {
+      background: #2b6ecb;
+      color: #ffffff;
     }
 
     .textarea{
@@ -232,17 +261,6 @@
       margin-top:10px;
     }
 
-    .status{
-      margin-top:8px;
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.5;
-    }
-
-    .status.ok{color:var(--green)}
-    .status.warn{color:var(--yellow)}
-    .status.err{color:var(--red)}
-
     .camera-box{
       position:relative;
       border-radius:18px;
@@ -259,6 +277,7 @@
       z-index:5;
       opacity:.95;
     }
+
     .tl{top:10px;left:10px;border-top:2px solid var(--green);border-left:2px solid var(--green)}
     .tr{top:10px;right:10px;border-top:2px solid var(--green);border-right:2px solid var(--green)}
     .bl{bottom:10px;left:10px;border-bottom:2px solid var(--green);border-left:2px solid var(--green)}
@@ -307,6 +326,7 @@
       padding:20px;
       text-align:center;
     }
+
     .analyzing.show{display:flex}
 
     .spinner{
@@ -317,6 +337,7 @@
       border-top-color:var(--green);
       animation:spin .85s linear infinite;
     }
+
     @keyframes spin{to{transform:rotate(360deg)}}
 
     .analyzing h3{
@@ -329,6 +350,18 @@
       font-size:12px;
       line-height:1.6;
       max-width:260px;
+    }
+
+    .empty{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-height:96px;
+      color:var(--muted);
+      text-align:center;
+      font-size:13px;
     }
 
     .score-wrap{
@@ -349,9 +382,6 @@
       font-weight:800;
       color:#fff;
       flex-shrink:0;
-      background:
-        radial-gradient(circle at center, #102219 58%, transparent 59%),
-        conic-gradient(var(--green) 0deg, var(--green) 240deg, rgba(255,255,255,.08) 240deg 360deg);
       border:1px solid var(--line);
     }
 
@@ -375,18 +405,6 @@
     .pill.low{background:rgba(57,217,138,.12); color:var(--green); border-color:rgba(57,217,138,.22)}
     .pill.mid{background:rgba(255,200,87,.12); color:var(--yellow); border-color:rgba(255,200,87,.2)}
     .pill.high{background:rgba(255,107,107,.12); color:var(--red); border-color:rgba(255,107,107,.22)}
-
-    .empty{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      min-height:96px;
-      color:var(--muted);
-      text-align:center;
-      font-size:13px;
-    }
 
     .result-block{
       display:none;
@@ -521,6 +539,13 @@
       font-size:13px;
     }
 
+    .small-help{
+      margin-top:8px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
     @media (max-width:460px){
       .two{grid-template-columns:1fr}
       .badge{display:none}
@@ -550,6 +575,7 @@
           <button class="btn btn-primary" onclick="saveKey()">Kaydet</button>
         </div>
         <div id="keyStatus" class="status warn">Önce Gemini API key gir ve kaydet.</div>
+        <div class="small-help">429 hatası görürsen bu genelde günlük / dakikalık Gemini kullanım kotasının dolduğunu gösterir. Biraz bekleyip tekrar dene veya başka key kullan.</div>
       </div>
     </div>
 
@@ -574,7 +600,7 @@
           <div id="analyzing" class="analyzing">
             <div class="spinner"></div>
             <h3>Analiz hazırlanıyor</h3>
-            <p>Yaprak rengi, stres belirtileri ve olası eksiklikler değerlendiriliyor...</p>
+            <p>Yaprak rengi, kök boğazı, leke, kıvrılma, stres ve olası eksiklikler değerlendiriliyor...</p>
           </div>
         </div>
 
@@ -629,7 +655,7 @@
         </div>
 
         <button id="analyzeBtn" class="btn btn-main" onclick="analyzePlant()" disabled>🧠 AI ile Analiz Et</button>
-        <div class="status">İlk sürümde fotoğrafa dayalı ön değerlendirme yapılır. Kesin teşhis için pH, EC ve kök durumu da ayrıca kontrol edilmelidir.</div>
+        <div class="status">Bu sürüm fotoğrafa dayalı ön değerlendirme yapar. Kesin teşhis için pH, EC, kök rengi, su sıcaklığı ve gelişim evresi de ayrıca değerlendirilmelidir.</div>
       </div>
     </div>
 
@@ -689,7 +715,6 @@
     let stream = null;
     let isCameraRunning = false;
     let currentImageBase64 = '';
-    let currentImageDataUrl = '';
     let historyArr = [];
 
     const video = document.getElementById('video');
@@ -713,34 +738,27 @@
     }
 
     function saveKey() {
-      const input = document.getElementById('keyInput');
-      const value = input.value.trim();
-
+      const value = document.getElementById('keyInput').value.trim();
       if (!value || value.length < 10) {
         alert('Geçerli bir Gemini API key gir.');
         return;
       }
-
       geminiKey = value;
-
       try {
         localStorage.setItem('ozka_gemini_key', value);
       } catch (e) {}
-
       setKeyStatus('API key kaydedildi ve kullanıma hazır.', 'ok');
     }
 
     (function loadSavedKey() {
-      let saved = '';
       try {
-        saved = localStorage.getItem('ozka_gemini_key') || '';
+        const saved = localStorage.getItem('ozka_gemini_key') || '';
+        if (saved) {
+          geminiKey = saved;
+          document.getElementById('keyInput').value = saved;
+          setKeyStatus('Kayıtlı API key yüklendi.', 'ok');
+        }
       } catch (e) {}
-
-      if (saved) {
-        geminiKey = saved;
-        document.getElementById('keyInput').value = saved;
-        setKeyStatus('Kayıtlı API key yüklendi.', 'ok');
-      }
     })();
 
     function triggerFileUpload() {
@@ -753,21 +771,17 @@
 
       const reader = new FileReader();
       reader.onload = function(e) {
-        const dataUrl = e.target.result;
-        setPreviewImage(dataUrl);
+        setPreviewImage(e.target.result);
       };
       reader.readAsDataURL(file);
     });
 
     function setPreviewImage(dataUrl) {
-      currentImageDataUrl = dataUrl;
       currentImageBase64 = dataUrl.split(',')[1] || '';
-
       document.getElementById('placeholder').style.display = 'none';
       previewImg.src = dataUrl;
       previewImg.style.display = 'block';
       video.style.display = 'none';
-
       document.getElementById('analyzeBtn').disabled = false;
       document.getElementById('retakeBtn').disabled = false;
     }
@@ -783,9 +797,7 @@
       btn.textContent = '⏳ Kamera açılıyor...';
 
       try {
-        if (stream) {
-          stopCamera();
-        }
+        stopCamera();
 
         stream = await navigator.mediaDevices.getUserMedia({
           video: {
@@ -798,11 +810,11 @@
         video.srcObject = stream;
         await video.play();
 
+        isCameraRunning = true;
         document.getElementById('placeholder').style.display = 'none';
         previewImg.style.display = 'none';
         video.style.display = 'block';
 
-        isCameraRunning = true;
         btn.textContent = '✅ Kamera Açık';
         document.getElementById('takePhotoBtn').disabled = false;
         document.getElementById('retakeBtn').disabled = false;
@@ -838,22 +850,18 @@
         previewImg.style.display = 'none';
         video.style.display = 'block';
         currentImageBase64 = '';
-        currentImageDataUrl = '';
         document.getElementById('analyzeBtn').disabled = true;
       } else {
         previewImg.style.display = 'none';
         document.getElementById('placeholder').style.display = 'flex';
         currentImageBase64 = '';
-        currentImageDataUrl = '';
         document.getElementById('analyzeBtn').disabled = true;
       }
     }
 
     function clearAnalysis() {
       stopCamera();
-
       currentImageBase64 = '';
-      currentImageDataUrl = '';
       previewImg.src = '';
       previewImg.style.display = 'none';
       video.style.display = 'none';
@@ -872,7 +880,6 @@
 
     function resetResultUI() {
       document.getElementById('emptyState').style.display = 'flex';
-
       document.getElementById('scoreWrap').style.display = 'none';
       document.getElementById('summaryBlock').style.display = 'none';
       document.getElementById('issuesBlock').style.display = 'none';
@@ -911,32 +918,47 @@
 
       return (
         'Sen hidroponik bitki sağlığı konusunda uzman bir tarım danışmanısın. Türkçe cevap ver.\n\n' +
-        'Aşağıdaki fotoğrafı sadece görüntüye göre ön değerlendirme amacıyla analiz et.\n\n' +
+        'Bu analiz fotoğrafa dayalı ön teşhis niteliğindedir. Görselden yalnızca makul derecede görülebilen bulgulara dayan.\n\n' +
+
         'BİTKİ TÜRÜ: ' + (plantMap[plantType] || plantType) + '\n' +
         'SİSTEM TÜRÜ: ' + (systemMap[systemType] || systemType) + '\n' +
         'KULLANICI NOTU: ' + (extraNote || 'Ek not yok') + '\n\n' +
+
+        'ÖZEL ANALİZ ALANLARI:\n' +
+        '- yaprak sararması\n' +
+        '- damar arası sararma\n' +
+        '- uç yanıklığı\n' +
+        '- kenar kurumaları\n' +
+        '- leke, çürüme, küf görünümü\n' +
+        '- kıvrılma, büzüşme, sarkma\n' +
+        '- gelişim geriliği\n' +
+        '- gövde ve kök boğazı görünümü\n' +
+        '- kök görünüyorsa kök rengi ve doku durumu\n' +
+        '- besin eksikliği / fazlalığı ihtimali\n' +
+        '- pH / EC kaynaklı alım problemi ihtimali\n' +
+        '- mantar, bakteri, zararlı veya stres ihtimali\n\n' +
+
         'KURALLAR:\n' +
-        '1. Emin olmadığın şeyi kesin teşhis gibi yazma.\n' +
-        '2. Sadece fotoğrafta görülebilen belirtilere göre yorum yap.\n' +
-        '3. Olasılık dilini profesyonel şekilde kullan.\n' +
-        '4. Cevap kısa, net ve uzman üslubunda olsun.\n' +
-        '5. Fotoğraf yetersizse bunu belirt.\n' +
-        '6. Sonuçta kullanıcıyı yönlendiren uygulanabilir öneriler ver.\n\n' +
-        'CEVABI MUTLAKA TAM OLARAK ŞU FORMATTA VER:\n' +
-        'SAGLIK_PUANI: [0-100 arası sadece sayı]\n' +
-        'RISK_SEVIYESI: [Düşük / Orta / Yüksek]\n' +
-        'GENEL_OZET: [1-3 cümle]\n' +
-        'OLASI_SORUNLAR:\n' +
-        '- [madde]\n' +
-        '- [madde]\n' +
-        'KONTROL_EDILECEKLER:\n' +
-        '- [madde]\n' +
-        '- [madde]\n' +
-        'ONERILEN_AKSIYONLAR:\n' +
-        '- [madde]\n' +
-        '- [madde]\n' +
-        'UYARI_NOTU: [1 kısa paragraf]\n\n' +
-        'Eğer bazı bölümlerde yeterli bulgu yoksa yine başlığı yaz ama uygun kısa açıklama ver.'
+        '1. Kesin değilsen bunu olasılık diliyle yaz.\n' +
+        '2. Fotoğrafta yeterli veri yoksa bunu açıkça belirt ama boş geçme.\n' +
+        '3. Genel geçer ve faydasız cümleler kurma.\n' +
+        '4. Mümkün olduğunda hidroponik bağlamında teknik kontrol önerileri ver.\n' +
+        '5. Öneriler kısa, net ve uygulanabilir olsun.\n' +
+        '6. Uygun olduğunda besin, pH düzenleyici, ölçüm ekipmanı veya hidroponik destek ürünleri için Topraksız Market\'e yönlendirme yapabilirsin.\n' +
+        '7. Çıktıyı mutlaka aşağıdaki JSON formatında ver. JSON dışında hiçbir şey yazma.\n\n' +
+
+        'JSON ŞEMASI:\n' +
+        '{\n' +
+        '  "saglik_puani": 0,\n' +
+        '  "risk_seviyesi": "Düşük",\n' +
+        '  "genel_ozet": "kısa özet",\n' +
+        '  "olasi_sorunlar": ["madde1", "madde2"],\n' +
+        '  "kontrol_edilecekler": ["madde1", "madde2"],\n' +
+        '  "onerilen_aksiyonlar": ["madde1", "madde2"],\n' +
+        '  "uyari_notu": "kısa uyarı notu"\n' +
+        '}\n\n' +
+
+        'Boş dizi döndürme. Yeterli veri yoksa da anlamlı ve dürüst maddeler yaz.'
       );
     }
 
@@ -976,19 +998,24 @@
               ]
             }],
             generationConfig: {
-              temperature: 0.2,
-              maxOutputTokens: 1200
+              temperature: 0.15,
+              maxOutputTokens: 1400
             }
           })
         });
 
         if (!res.ok) {
           const errText = await res.text();
+
+          if (res.status === 429) {
+            throw new Error('Gemini kullanım kotası şu an dolu. Biraz bekleyip tekrar dene veya farklı bir API key kullan.');
+          }
+
           throw new Error('HTTP ' + res.status + ': ' + errText);
         }
 
         const data = await res.json();
-        const text =
+        const rawText =
           data &&
           data.candidates &&
           data.candidates[0] &&
@@ -997,44 +1024,101 @@
           data.candidates[0].content.parts[0] &&
           data.candidates[0].content.parts[0].text;
 
-        if (!text) {
+        if (!rawText) {
           throw new Error('AI yanıtı boş geldi.');
         }
 
-        showResult(text);
+        const parsed = parseAiResponse(rawText);
+        showResult(parsed);
       } catch (err) {
-        alert('Analiz hatası: ' + err.message);
+        showError(err.message);
       } finally {
         document.getElementById('analyzing').classList.remove('show');
         document.getElementById('analyzeBtn').disabled = false;
       }
     }
 
-    function parseSingleValue(text, label) {
-      const regex = new RegExp(label + '\\s*:\\s*(.+)', 'i');
-      const match = text.match(regex);
-      return match ? match[1].trim() : '';
+    function parseAiResponse(rawText) {
+      let jsonText = rawText.trim();
+
+      const fencedMatch = jsonText.match(/```json\s*([\s\S]*?)```/i);
+      if (fencedMatch) {
+        jsonText = fencedMatch[1].trim();
+      }
+
+      const start = jsonText.indexOf('{');
+      const end = jsonText.lastIndexOf('}');
+      if (start !== -1 && end !== -1) {
+        jsonText = jsonText.slice(start, end + 1);
+      }
+
+      let obj;
+      try {
+        obj = JSON.parse(jsonText);
+      } catch (e) {
+        obj = {
+          saglik_puani: 55,
+          risk_seviyesi: 'Orta',
+          genel_ozet: rawText.slice(0, 250) || 'AI yanıtı alındı ancak yapılandırılmış sonuç ayrıştırılamadı.',
+          olasi_sorunlar: ['AI yanıtı JSON formatında gelmediği için sonuç sınırlı yorumlandı.'],
+          kontrol_edilecekler: ['Fotoğrafı daha net, yakın ve iyi ışıkta tekrar çek.'],
+          onerilen_aksiyonlar: ['Aynı bitkiyi farklı açıdan yeniden analiz et.'],
+          uyari_notu: 'Bu sonuç sınırlı ayrıştırma ile üretildi. Daha net fotoğraf ve ek bilgiler sonucu iyileştirir.'
+        };
+      }
+
+      const safeScore = clampNumber(obj.saglik_puani, 0, 100, 55);
+      const safeRisk = normalizeRisk(obj.risk_seviyesi);
+      const safeSummary = normalizeText(obj.genel_ozet, 'Fotoğrafa dayalı ön değerlendirme tamamlandı.');
+      const safeIssues = normalizeArray(obj.olasi_sorunlar, ['Fotoğrafta bazı stres belirtileri olabilir, daha net görüntü önerilir.']);
+      const safeChecks = normalizeArray(obj.kontrol_edilecekler, ['pH, EC, kök rengi ve su sıcaklığını kontrol et.']);
+      const safeActions = normalizeArray(obj.onerilen_aksiyonlar, ['Bitkiyi daha net ışıkta tekrar analiz et ve gerekli ölçümleri yap.']);
+      const safeWarning = normalizeText(
+        obj.uyari_notu,
+        'Bu analiz fotoğrafa dayalı ön değerlendirmedir. Kesin teşhis için pH, EC, kök durumu ve gelişim evresi birlikte değerlendirilmelidir.'
+      );
+
+      return {
+        saglik_puani: safeScore,
+        risk_seviyesi: safeRisk,
+        genel_ozet: safeSummary,
+        olasi_sorunlar: safeIssues,
+        kontrol_edilecekler: safeChecks,
+        onerilen_aksiyonlar: safeActions,
+        uyari_notu: safeWarning
+      };
     }
 
-    function parseListBlock(text, label, nextLabels) {
-      const nextPattern = nextLabels.join('|');
-      const regex = new RegExp(label + '\\s*:\\s*([\\s\\S]+?)(?=' + nextPattern + '|$)', 'i');
-      const match = text.match(regex);
-      if (!match) return [];
+    function clampNumber(value, min, max, fallback) {
+      const n = parseInt(value, 10);
+      if (isNaN(n)) return fallback;
+      return Math.max(min, Math.min(max, n));
+    }
 
-      return match[1]
-        .split('\n')
-        .map(line => line.trim())
-        .filter(line => line.startsWith('-'))
-        .map(line => line.replace(/^-+\s*/, '').trim())
-        .filter(Boolean);
+    function normalizeRisk(value) {
+      const text = String(value || '').toLowerCase();
+      if (text.includes('yüksek') || text.includes('yuksek')) return 'Yüksek';
+      if (text.includes('orta')) return 'Orta';
+      if (text.includes('düşük') || text.includes('dusuk')) return 'Düşük';
+      return 'Orta';
+    }
+
+    function normalizeText(value, fallback) {
+      const text = String(value || '').trim();
+      return text || fallback;
+    }
+
+    function normalizeArray(value, fallback) {
+      if (Array.isArray(value)) {
+        const cleaned = value
+          .map(v => String(v || '').trim())
+          .filter(Boolean);
+        return cleaned.length ? cleaned : fallback;
+      }
+      return fallback;
     }
 
     function makeListHtml(items, icon) {
-      if (!items || !items.length) {
-        return '<div class="list-item"><div class="list-bullet">•</div><div class="list-text">Yeterli bulgu belirtilmedi.</div></div>';
-      }
-
       return items.map(item => (
         '<div class="list-item">' +
           '<div class="list-bullet">' + icon + '</div>' +
@@ -1057,7 +1141,7 @@
       const pill = document.getElementById('riskPill');
 
       let riskClass = 'low';
-      let titleText = 'Genel durum iyi';
+      let titleText = 'Genel durum iyi görünüyor';
 
       if (String(risk).toLowerCase().includes('yüksek')) {
         riskClass = 'high';
@@ -1068,48 +1152,39 @@
       }
 
       pill.className = 'pill ' + riskClass;
-      pill.textContent = 'Risk Seviyesi: ' + (risk || 'Belirtilmedi');
+      pill.textContent = 'Risk Seviyesi: ' + risk;
       title.textContent = titleText;
     }
 
-    function showResult(text) {
-      const scoreRaw = parseSingleValue(text, 'SAGLIK_PUANI');
-      const risk = parseSingleValue(text, 'RISK_SEVIYESI');
-      const summary = parseSingleValue(text, 'GENEL_OZET');
-      const warning = parseSingleValue(text, 'UYARI_NOTU');
-
-      const issues = parseListBlock(text, 'OLASI_SORUNLAR', ['KONTROL_EDILECEKLER', 'ONERILEN_AKSIYONLAR', 'UYARI_NOTU']);
-      const checks = parseListBlock(text, 'KONTROL_EDILECEKLER', ['ONERILEN_AKSIYONLAR', 'UYARI_NOTU']);
-      const actions = parseListBlock(text, 'ONERILEN_AKSIYONLAR', ['UYARI_NOTU']);
-
-      let score = parseInt((scoreRaw.match(/\d+/) || ['0'])[0], 10);
-      if (isNaN(score)) score = 0;
-
+    function showResult(result) {
       document.getElementById('emptyState').style.display = 'none';
-
       document.getElementById('scoreWrap').style.display = 'flex';
-      applyScoreUI(score, risk);
-
-      document.getElementById('summaryText').textContent = summary || 'Fotoğrafa dayalı kısa değerlendirme alınamadı.';
       document.getElementById('summaryBlock').style.display = 'block';
-
-      document.getElementById('issuesList').innerHTML = makeListHtml(issues, '!');
       document.getElementById('issuesBlock').style.display = 'block';
-
-      document.getElementById('checksList').innerHTML = makeListHtml(checks, '?');
       document.getElementById('checksBlock').style.display = 'block';
-
-      document.getElementById('actionsList').innerHTML = makeListHtml(actions, '→');
       document.getElementById('actionsBlock').style.display = 'block';
-
-      document.getElementById('warningNote').textContent = warning || 'Bu analiz fotoğrafa dayalı ön değerlendirmedir. Kesin teşhis için pH, EC, kök durumu ve gelişim evresi birlikte değerlendirilmelidir.';
       document.getElementById('warningNote').style.display = 'block';
 
+      applyScoreUI(result.saglik_puani, result.risk_seviyesi);
+
+      document.getElementById('summaryText').textContent = result.genel_ozet;
+      document.getElementById('issuesList').innerHTML = makeListHtml(result.olasi_sorunlar, '!');
+      document.getElementById('checksList').innerHTML = makeListHtml(result.kontrol_edilecekler, '?');
+      document.getElementById('actionsList').innerHTML = makeListHtml(result.onerilen_aksiyonlar, '→');
+      document.getElementById('warningNote').textContent = result.uyari_notu;
+
       addHistory({
-        score: score,
-        risk: risk || 'Belirtilmedi',
-        summary: summary || 'Özet yok'
+        score: result.saglik_puani,
+        risk: result.risk_seviyesi,
+        summary: result.genel_ozet
       });
+    }
+
+    function showError(message) {
+      resetResultUI();
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('summaryBlock').style.display = 'block';
+      document.getElementById('summaryText').textContent = message;
     }
 
     function addHistory(item) {
@@ -1126,7 +1201,6 @@
       });
 
       if (historyArr.length > 6) historyArr.pop();
-
       renderHistory();
     }
 
