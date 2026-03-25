@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Özka Bitki Analiz</title>
+  <meta name="theme-color" content="#0c2418" />
+  <link rel="manifest" href="/ozka-bitki-analiz/manifest.json" />
+  <link rel="apple-touch-icon" href="/ozka-bitki-analiz/icons/icon-192.png" />
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root{
+      --bg:#07140d;
+      --bg2:#0b1d14;
+      --card:#102219;
+      --card2:#13291e;
+      --line:#21402d;
+      --text:#edf7ef;
+      --muted:#9ab8a1;
+      --green:#39d98a;
+      --green2:#1fbf75;
+      --blue:#49b7ff;
+      --yellow:#ffc857;
+      --red:#ff6b6b;
+      --shadow:0 10px 30px rgba(0,0,0,.28);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{background:linear-gradient(180deg,var(--bg),#06100a 60%, #08140d);color:var(--text);font-family:'Inter',sans-serif;min-height:100%}
+    body::before{
+      content:'';
+      position:fixed;
+      inset:0;
+      background:
+        linear-gradient(rgba(57,217,138,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(57,217,138,.04) 1px, transparent 1px);
+      background-size:34px 34px;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .app{
+      position:relative;
+      z-index:1;
+      max-width:520px;
+      margin:0 auto;
+      padding:0 0 90px;
+    }
+
+    .hero{
+      padding:22px 18px 12px;
+      border-bottom:1px solid rgba(255,255,255,.05);
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+      backdrop-filter: blur(8px);
+      position:sticky;
+      top:0;
+      z-index:30;
+    }
+
+    .brand-row{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .brand-icon{
+      width:46px;
+      height:46px;
+      border-radius:14px;
+      background:linear-gradient(135deg, var(--green), var(--blue));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      box-shadow:var(--shadow);
+      flex-shrink:0;
+    }
+
+    .brand-text h1{
+      font-size:20px;
+      line-height:1.1;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+
+    .brand-text p{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:3px;
+      line-height:1.4;
+    }
+
+    .badge{
+      margin-left:auto;
+      border:1px solid rgba(73,183,255,.55);
+      color:var(--blue);
+      padding:5px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    .section{
+      padding:16px 18px 0;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(19,41,30,.98), rgba(16,34,25,.98));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:'';
+      position:absolute;
+      top:0; left:0; right:0;
+      height:2px;
+      background:linear-gradient(90deg, var(--green), var(--blue));
+      opacity:.9;
+    }
+
+    .label{
+      display:block;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin-bottom:10px;
+    }
+
+    .subtext{
+      font-size:12px;
+      line-height:1.6;
+      color:var(--muted);
+    }
+
+    .grid{
+      display:grid;
+      gap:10px;
+    }
+
+    .two{
+      grid-template-columns:1fr 1fr;
+    }
+
+    .input, .select, .textarea{
+      width:100%;
+      background:rgba(255,255,255,.02);
+      border:1px solid var(--line);
+      color:var(--text);
+      border-radius:14px;
+      outline:none;
+      padding:13px 14px;
+      font-size:14px;
+      font-family:'Inter',sans-serif;
+    }
+
+    .input:focus, .select:focus, .textarea:focus{
+      border-color:var(--green);
+      box-shadow:0 0 0 3px rgba(57,217,138,.12);
+    }
+
+    .textarea{
+      min-height:84px;
+      resize:vertical;
+    }
+
+    .key-row{
+      display:flex;
+      gap:10px;
+      align-items:stretch;
+    }
+
+    .key-row .input{
+      flex:1;
+      min-width:0;
+    }
+
+    .btn{
+      border:none;
+      border-radius:14px;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+      transition:.18s ease;
+    }
+
+    .btn:hover{transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
+    .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+    .btn-primary{
+      background:linear-gradient(135deg, var(--green), var(--blue));
+      color:#061109;
+      font-weight:800;
+      padding:13px 18px;
+      min-width:112px;
+    }
+
+    .btn-main{
+      width:100%;
+      padding:15px 16px;
+      font-size:15px;
+      font-weight:800;
+      color:#07140d;
+      background:linear-gradient(135deg, var(--green), var(--blue));
+      margin-top:10px;
+    }
+
+    .btn-secondary{
+      width:100%;
+      padding:13px 14px;
+      font-size:14px;
+      font-weight:700;
+      color:var(--text);
+      background:transparent;
+      border:1px solid var(--line);
+    }
+
+    .btn-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .status{
+      margin-top:8px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    .status.ok{color:var(--green)}
+    .status.warn{color:var(--yellow)}
+    .status.err{color:var(--red)}
+
+    .camera-box{
+      position:relative;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:#000;
+      aspect-ratio:4/3;
+    }
+
+    .camera-corner{
+      position:absolute;
+      width:24px;
+      height:24px;
+      z-index:5;
+      opacity:.95;
+    }
+    .tl{top:10px;left:10px;border-top:2px solid var(--green);border-left:2px solid var(--green)}
+    .tr{top:10px;right:10px;border-top:2px solid var(--green);border-right:2px solid var(--green)}
+    .bl{bottom:10px;left:10px;border-bottom:2px solid var(--green);border-left:2px solid var(--green)}
+    .br{bottom:10px;right:10px;border-bottom:2px solid var(--green);border-right:2px solid var(--green)}
+
+    .placeholder{
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      color:var(--muted);
+      text-align:center;
+      padding:18px;
+    }
+
+    .placeholder .icon{
+      font-size:42px;
+      opacity:.35;
+    }
+
+    video, #previewImg{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    #video{display:none}
+    #previewImg{display:none; position:absolute; inset:0; z-index:2}
+    #snapCanvas{display:none}
+    #fileInput{display:none}
+
+    .analyzing{
+      position:absolute;
+      inset:0;
+      z-index:15;
+      background:rgba(4,8,6,.82);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:14px;
+      padding:20px;
+      text-align:center;
+    }
+    .analyzing.show{display:flex}
+
+    .spinner{
+      width:54px;
+      height:54px;
+      border-radius:999px;
+      border:3px solid rgba(255,255,255,.12);
+      border-top-color:var(--green);
+      animation:spin .85s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .analyzing h3{
+      font-size:15px;
+      font-weight:800;
+    }
+
+    .analyzing p{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+      max-width:260px;
+    }
+
+    .score-wrap{
+      display:none;
+      align-items:center;
+      gap:14px;
+      margin-bottom:14px;
+    }
+
+    .score-ring{
+      width:88px;
+      height:88px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      font-weight:800;
+      color:#fff;
+      flex-shrink:0;
+      background:
+        radial-gradient(circle at center, #102219 58%, transparent 59%),
+        conic-gradient(var(--green) 0deg, var(--green) 240deg, rgba(255,255,255,.08) 240deg 360deg);
+      border:1px solid var(--line);
+    }
+
+    .score-meta h3{
+      font-size:16px;
+      font-weight:800;
+      margin-bottom:5px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      border:1px solid transparent;
+    }
+
+    .pill.low{background:rgba(57,217,138,.12); color:var(--green); border-color:rgba(57,217,138,.22)}
+    .pill.mid{background:rgba(255,200,87,.12); color:var(--yellow); border-color:rgba(255,200,87,.2)}
+    .pill.high{background:rgba(255,107,107,.12); color:var(--red); border-color:rgba(255,107,107,.22)}
+
+    .empty{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-height:96px;
+      color:var(--muted);
+      text-align:center;
+      font-size:13px;
+    }
+
+    .result-block{
+      display:none;
+      margin-top:12px;
+    }
+
+    .result-title{
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+      margin-bottom:9px;
+    }
+
+    .summary{
+      font-size:14px;
+      line-height:1.7;
+      color:var(--text);
+      background:rgba(255,255,255,.02);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+    }
+
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .list-item{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      background:rgba(255,255,255,.02);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px 13px;
+    }
+
+    .list-bullet{
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      background:rgba(73,183,255,.12);
+      color:var(--blue);
+      font-size:14px;
+      font-weight:800;
+    }
+
+    .list-text{
+      font-size:13px;
+      line-height:1.6;
+      color:var(--text);
+    }
+
+    .note{
+      margin-top:14px;
+      font-size:12px;
+      line-height:1.7;
+      color:var(--muted);
+      border-top:1px solid var(--line);
+      padding-top:12px;
+    }
+
+    .history-list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:2px;
+    }
+
+    .history-item{
+      background:rgba(255,255,255,.02);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      display:grid;
+      grid-template-columns:54px 1fr auto;
+      gap:10px;
+      align-items:center;
+    }
+
+    .history-score{
+      width:54px;
+      height:54px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      font-size:18px;
+      background:linear-gradient(135deg, rgba(57,217,138,.18), rgba(73,183,255,.18));
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .history-main{
+      min-width:0;
+    }
+
+    .history-main h4{
+      font-size:14px;
+      font-weight:700;
+      margin-bottom:3px;
+    }
+
+    .history-main p{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.5;
+      overflow:hidden;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+    }
+
+    .history-time{
+      font-size:11px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+
+    .no-history{
+      text-align:center;
+      color:var(--muted);
+      padding:8px 0 2px;
+      font-size:13px;
+    }
+
+    @media (max-width:460px){
+      .two{grid-template-columns:1fr}
+      .badge{display:none}
+      .key-row{flex-direction:column}
+      .btn-row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="hero">
+      <div class="brand-row">
+        <div class="brand-icon">🌿</div>
+        <div class="brand-text">
+          <h1>Özka Bitki Analiz</h1>
+          <p>Hidroponik bitkiler için AI destekli ön sağlık değerlendirmesi</p>
+        </div>
+        <div class="badge">AI ANALİZ</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <span class="label">1. Gemini API Key</span>
+        <div class="key-row">
+          <input id="keyInput" class="input" type="text" placeholder="AIzaSy... buraya yapıştır" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <button class="btn btn-primary" onclick="saveKey()">Kaydet</button>
+        </div>
+        <div id="keyStatus" class="status warn">Önce Gemini API key gir ve kaydet.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <span class="label">2. Fotoğraf</span>
+        <div class="camera-box">
+          <div class="camera-corner tl"></div>
+          <div class="camera-corner tr"></div>
+          <div class="camera-corner bl"></div>
+          <div class="camera-corner br"></div>
+
+          <div id="placeholder" class="placeholder">
+            <div class="icon">📷</div>
+            <div>Bitkinin fotoğrafını çek veya galeriden yükle</div>
+          </div>
+
+          <video id="video" autoplay playsinline muted></video>
+          <img id="previewImg" alt="Önizleme">
+          <canvas id="snapCanvas"></canvas>
+
+          <div id="analyzing" class="analyzing">
+            <div class="spinner"></div>
+            <h3>Analiz hazırlanıyor</h3>
+            <p>Yaprak rengi, stres belirtileri ve olası eksiklikler değerlendiriliyor...</p>
+          </div>
+        </div>
+
+        <button id="startCamBtn" class="btn btn-main" onclick="startCam()">📷 Kamerayı Aç</button>
+
+        <div class="btn-row">
+          <button id="takePhotoBtn" class="btn btn-secondary" onclick="takePhoto()" disabled>✨ Fotoğraf Çek</button>
+          <button class="btn btn-secondary" onclick="triggerFileUpload()">🖼 Galeriden Yükle</button>
+        </div>
+
+        <div class="btn-row">
+          <button id="retakeBtn" class="btn btn-secondary" onclick="resumeCamera()" disabled>🔄 Tekrar Çek</button>
+          <button class="btn btn-secondary" onclick="clearAnalysis()">🗑 Temizle</button>
+        </div>
+
+        <input id="fileInput" type="file" accept="image/*">
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <span class="label">3. Bitki Bilgisi</span>
+
+        <div class="grid two">
+          <div>
+            <span class="label" style="margin-bottom:6px">Bitki Türü</span>
+            <select id="plantType" class="select">
+              <option value="marul">Marul</option>
+              <option value="feslegen">Fesleğen</option>
+              <option value="cilek">Çilek</option>
+              <option value="domates">Domates</option>
+              <option value="salatalik">Salatalık</option>
+              <option value="genel">Genel Analiz</option>
+            </select>
+          </div>
+
+          <div>
+            <span class="label" style="margin-bottom:6px">Sistem Tipi</span>
+            <select id="systemType" class="select">
+              <option value="nft">NFT</option>
+              <option value="dikey-kule">Dikey Kule</option>
+              <option value="cocopeat">Cocopeat</option>
+              <option value="dwc">DWC</option>
+              <option value="diger">Diğer</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:10px">
+          <span class="label" style="margin-bottom:6px">Opsiyonel Not</span>
+          <textarea id="extraNote" class="textarea" placeholder="Örn: Alt yapraklarda sararma var, son 2 gündür gelişim yavaşladı..."></textarea>
+        </div>
+
+        <button id="analyzeBtn" class="btn btn-main" onclick="analyzePlant()" disabled>🧠 AI ile Analiz Et</button>
+        <div class="status">İlk sürümde fotoğrafa dayalı ön değerlendirme yapılır. Kesin teşhis için pH, EC ve kök durumu da ayrıca kontrol edilmelidir.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <span class="label">4. Sonuç</span>
+
+        <div id="emptyState" class="empty">
+          <div style="font-size:34px; opacity:.35;">🤖</div>
+          <div>Fotoğraf hazır olduğunda AI analiz sonucu burada görünecek</div>
+        </div>
+
+        <div id="scoreWrap" class="score-wrap">
+          <div id="scoreRing" class="score-ring">0</div>
+          <div class="score-meta">
+            <h3 id="riskTitle">Durum bekleniyor</h3>
+            <div id="riskPill" class="pill low">Risk bilgisi yok</div>
+          </div>
+        </div>
+
+        <div id="summaryBlock" class="result-block">
+          <div class="result-title">Genel Değerlendirme</div>
+          <div id="summaryText" class="summary"></div>
+        </div>
+
+        <div id="issuesBlock" class="result-block">
+          <div class="result-title">Olası Sorunlar</div>
+          <div id="issuesList" class="list"></div>
+        </div>
+
+        <div id="checksBlock" class="result-block">
+          <div class="result-title">Kontrol Edilmesi Gerekenler</div>
+          <div id="checksList" class="list"></div>
+        </div>
+
+        <div id="actionsBlock" class="result-block">
+          <div class="result-title">Önerilen Aksiyonlar</div>
+          <div id="actionsList" class="list"></div>
+        </div>
+
+        <div id="warningNote" class="note" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <span class="label">5. Geçmiş Analizler</span>
+        <div id="historyList" class="history-list">
+          <div class="no-history">Henüz analiz yapılmadı</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let geminiKey = '';
+    let stream = null;
+    let isCameraRunning = false;
+    let currentImageBase64 = '';
+    let currentImageDataUrl = '';
+    let historyArr = [];
+
+    const video = document.getElementById('video');
+    const previewImg = document.getElementById('previewImg');
+    const snapCanvas = document.getElementById('snapCanvas');
+    const fileInput = document.getElementById('fileInput');
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function setKeyStatus(text, type) {
+      const el = document.getElementById('keyStatus');
+      el.textContent = text;
+      el.className = 'status ' + (type || '');
+    }
+
+    function saveKey() {
+      const input = document.getElementById('keyInput');
+      const value = input.value.trim();
+
+      if (!value || value.length < 10) {
+        alert('Geçerli bir Gemini API key gir.');
+        return;
+      }
+
+      geminiKey = value;
+
+      try {
+        localStorage.setItem('ozka_gemini_key', value);
+      } catch (e) {}
+
+      setKeyStatus('API key kaydedildi ve kullanıma hazır.', 'ok');
+    }
+
+    (function loadSavedKey() {
+      let saved = '';
+      try {
+        saved = localStorage.getItem('ozka_gemini_key') || '';
+      } catch (e) {}
+
+      if (saved) {
+        geminiKey = saved;
+        document.getElementById('keyInput').value = saved;
+        setKeyStatus('Kayıtlı API key yüklendi.', 'ok');
+      }
+    })();
+
+    function triggerFileUpload() {
+      fileInput.click();
+    }
+
+    fileInput.addEventListener('change', function(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        setPreviewImage(dataUrl);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function setPreviewImage(dataUrl) {
+      currentImageDataUrl = dataUrl;
+      currentImageBase64 = dataUrl.split(',')[1] || '';
+
+      document.getElementById('placeholder').style.display = 'none';
+      previewImg.src = dataUrl;
+      previewImg.style.display = 'block';
+      video.style.display = 'none';
+
+      document.getElementById('analyzeBtn').disabled = false;
+      document.getElementById('retakeBtn').disabled = false;
+    }
+
+    async function startCam() {
+      if (!geminiKey) {
+        alert('Önce Gemini API key gir ve kaydet.');
+        return;
+      }
+
+      const btn = document.getElementById('startCamBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Kamera açılıyor...';
+
+      try {
+        if (stream) {
+          stopCamera();
+        }
+
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: 'environment' },
+            width: { ideal: 1280 },
+            height: { ideal: 960 }
+          }
+        });
+
+        video.srcObject = stream;
+        await video.play();
+
+        document.getElementById('placeholder').style.display = 'none';
+        previewImg.style.display = 'none';
+        video.style.display = 'block';
+
+        isCameraRunning = true;
+        btn.textContent = '✅ Kamera Açık';
+        document.getElementById('takePhotoBtn').disabled = false;
+        document.getElementById('retakeBtn').disabled = false;
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = '📷 Kamerayı Aç';
+        alert(err.name === 'NotAllowedError' ? 'Kamera izni vermen gerekiyor.' : 'Kamera açılamadı: ' + err.message);
+      }
+    }
+
+    function stopCamera() {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+      isCameraRunning = false;
+    }
+
+    function takePhoto() {
+      if (!isCameraRunning) return;
+
+      const ctx = snapCanvas.getContext('2d');
+      snapCanvas.width = video.videoWidth || 1280;
+      snapCanvas.height = video.videoHeight || 960;
+      ctx.drawImage(video, 0, 0, snapCanvas.width, snapCanvas.height);
+
+      const dataUrl = snapCanvas.toDataURL('image/jpeg', 0.9);
+      setPreviewImage(dataUrl);
+    }
+
+    function resumeCamera() {
+      if (isCameraRunning) {
+        previewImg.style.display = 'none';
+        video.style.display = 'block';
+        currentImageBase64 = '';
+        currentImageDataUrl = '';
+        document.getElementById('analyzeBtn').disabled = true;
+      } else {
+        previewImg.style.display = 'none';
+        document.getElementById('placeholder').style.display = 'flex';
+        currentImageBase64 = '';
+        currentImageDataUrl = '';
+        document.getElementById('analyzeBtn').disabled = true;
+      }
+    }
+
+    function clearAnalysis() {
+      stopCamera();
+
+      currentImageBase64 = '';
+      currentImageDataUrl = '';
+      previewImg.src = '';
+      previewImg.style.display = 'none';
+      video.style.display = 'none';
+      document.getElementById('placeholder').style.display = 'flex';
+
+      document.getElementById('startCamBtn').disabled = false;
+      document.getElementById('startCamBtn').textContent = '📷 Kamerayı Aç';
+      document.getElementById('takePhotoBtn').disabled = true;
+      document.getElementById('retakeBtn').disabled = true;
+      document.getElementById('analyzeBtn').disabled = true;
+
+      document.getElementById('analyzing').classList.remove('show');
+      resetResultUI();
+      fileInput.value = '';
+    }
+
+    function resetResultUI() {
+      document.getElementById('emptyState').style.display = 'flex';
+
+      document.getElementById('scoreWrap').style.display = 'none';
+      document.getElementById('summaryBlock').style.display = 'none';
+      document.getElementById('issuesBlock').style.display = 'none';
+      document.getElementById('checksBlock').style.display = 'none';
+      document.getElementById('actionsBlock').style.display = 'none';
+      document.getElementById('warningNote').style.display = 'none';
+
+      document.getElementById('summaryText').textContent = '';
+      document.getElementById('issuesList').innerHTML = '';
+      document.getElementById('checksList').innerHTML = '';
+      document.getElementById('actionsList').innerHTML = '';
+      document.getElementById('warningNote').textContent = '';
+    }
+
+    function buildPrompt() {
+      const plantType = document.getElementById('plantType').value;
+      const systemType = document.getElementById('systemType').value;
+      const extraNote = document.getElementById('extraNote').value.trim();
+
+      const plantMap = {
+        marul: 'marul',
+        feslegen: 'fesleğen',
+        cilek: 'çilek',
+        domates: 'domates',
+        salatalik: 'salatalık',
+        genel: 'genel hidroponik bitki'
+      };
+
+      const systemMap = {
+        nft: 'NFT sistemi',
+        'dikey-kule': 'dikey kule sistemi',
+        cocopeat: 'cocopeat sistemi',
+        dwc: 'DWC sistemi',
+        diger: 'diğer sistem'
+      };
+
+      return (
+        'Sen hidroponik bitki sağlığı konusunda uzman bir tarım danışmanısın. Türkçe cevap ver.\n\n' +
+        'Aşağıdaki fotoğrafı sadece görüntüye göre ön değerlendirme amacıyla analiz et.\n\n' +
+        'BİTKİ TÜRÜ: ' + (plantMap[plantType] || plantType) + '\n' +
+        'SİSTEM TÜRÜ: ' + (systemMap[systemType] || systemType) + '\n' +
+        'KULLANICI NOTU: ' + (extraNote || 'Ek not yok') + '\n\n' +
+        'KURALLAR:\n' +
+        '1. Emin olmadığın şeyi kesin teşhis gibi yazma.\n' +
+        '2. Sadece fotoğrafta görülebilen belirtilere göre yorum yap.\n' +
+        '3. Olasılık dilini profesyonel şekilde kullan.\n' +
+        '4. Cevap kısa, net ve uzman üslubunda olsun.\n' +
+        '5. Fotoğraf yetersizse bunu belirt.\n' +
+        '6. Sonuçta kullanıcıyı yönlendiren uygulanabilir öneriler ver.\n\n' +
+        'CEVABI MUTLAKA TAM OLARAK ŞU FORMATTA VER:\n' +
+        'SAGLIK_PUANI: [0-100 arası sadece sayı]\n' +
+        'RISK_SEVIYESI: [Düşük / Orta / Yüksek]\n' +
+        'GENEL_OZET: [1-3 cümle]\n' +
+        'OLASI_SORUNLAR:\n' +
+        '- [madde]\n' +
+        '- [madde]\n' +
+        'KONTROL_EDILECEKLER:\n' +
+        '- [madde]\n' +
+        '- [madde]\n' +
+        'ONERILEN_AKSIYONLAR:\n' +
+        '- [madde]\n' +
+        '- [madde]\n' +
+        'UYARI_NOTU: [1 kısa paragraf]\n\n' +
+        'Eğer bazı bölümlerde yeterli bulgu yoksa yine başlığı yaz ama uygun kısa açıklama ver.'
+      );
+    }
+
+    async function analyzePlant() {
+      if (!geminiKey) {
+        alert('Önce Gemini API key gir ve kaydet.');
+        return;
+      }
+
+      if (!currentImageBase64) {
+        alert('Önce fotoğraf çek veya galeriden bir fotoğraf yükle.');
+        return;
+      }
+
+      resetResultUI();
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('analyzing').classList.add('show');
+      document.getElementById('analyzeBtn').disabled = true;
+
+      const prompt = buildPrompt();
+      const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + geminiKey;
+
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [
+                { text: prompt },
+                {
+                  inline_data: {
+                    mime_type: 'image/jpeg',
+                    data: currentImageBase64
+                  }
+                }
+              ]
+            }],
+            generationConfig: {
+              temperature: 0.2,
+              maxOutputTokens: 1200
+            }
+          })
+        });
+
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error('HTTP ' + res.status + ': ' + errText);
+        }
+
+        const data = await res.json();
+        const text =
+          data &&
+          data.candidates &&
+          data.candidates[0] &&
+          data.candidates[0].content &&
+          data.candidates[0].content.parts &&
+          data.candidates[0].content.parts[0] &&
+          data.candidates[0].content.parts[0].text;
+
+        if (!text) {
+          throw new Error('AI yanıtı boş geldi.');
+        }
+
+        showResult(text);
+      } catch (err) {
+        alert('Analiz hatası: ' + err.message);
+      } finally {
+        document.getElementById('analyzing').classList.remove('show');
+        document.getElementById('analyzeBtn').disabled = false;
+      }
+    }
+
+    function parseSingleValue(text, label) {
+      const regex = new RegExp(label + '\\s*:\\s*(.+)', 'i');
+      const match = text.match(regex);
+      return match ? match[1].trim() : '';
+    }
+
+    function parseListBlock(text, label, nextLabels) {
+      const nextPattern = nextLabels.join('|');
+      const regex = new RegExp(label + '\\s*:\\s*([\\s\\S]+?)(?=' + nextPattern + '|$)', 'i');
+      const match = text.match(regex);
+      if (!match) return [];
+
+      return match[1]
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line.startsWith('-'))
+        .map(line => line.replace(/^-+\s*/, '').trim())
+        .filter(Boolean);
+    }
+
+    function makeListHtml(items, icon) {
+      if (!items || !items.length) {
+        return '<div class="list-item"><div class="list-bullet">•</div><div class="list-text">Yeterli bulgu belirtilmedi.</div></div>';
+      }
+
+      return items.map(item => (
+        '<div class="list-item">' +
+          '<div class="list-bullet">' + icon + '</div>' +
+          '<div class="list-text">' + escapeHtml(item) + '</div>' +
+        '</div>'
+      )).join('');
+    }
+
+    function applyScoreUI(score, risk) {
+      const clamped = Math.max(0, Math.min(100, score || 0));
+      const degrees = Math.round((clamped / 100) * 360);
+
+      const ring = document.getElementById('scoreRing');
+      ring.textContent = clamped;
+      ring.style.background =
+        'radial-gradient(circle at center, #102219 58%, transparent 59%), ' +
+        'conic-gradient(var(--green) 0deg, var(--green) ' + degrees + 'deg, rgba(255,255,255,.08) ' + degrees + 'deg 360deg)';
+
+      const title = document.getElementById('riskTitle');
+      const pill = document.getElementById('riskPill');
+
+      let riskClass = 'low';
+      let titleText = 'Genel durum iyi';
+
+      if (String(risk).toLowerCase().includes('yüksek')) {
+        riskClass = 'high';
+        titleText = 'Yüksek dikkat gerekiyor';
+      } else if (String(risk).toLowerCase().includes('orta')) {
+        riskClass = 'mid';
+        titleText = 'Orta risk seviyesi';
+      }
+
+      pill.className = 'pill ' + riskClass;
+      pill.textContent = 'Risk Seviyesi: ' + (risk || 'Belirtilmedi');
+      title.textContent = titleText;
+    }
+
+    function showResult(text) {
+      const scoreRaw = parseSingleValue(text, 'SAGLIK_PUANI');
+      const risk = parseSingleValue(text, 'RISK_SEVIYESI');
+      const summary = parseSingleValue(text, 'GENEL_OZET');
+      const warning = parseSingleValue(text, 'UYARI_NOTU');
+
+      const issues = parseListBlock(text, 'OLASI_SORUNLAR', ['KONTROL_EDILECEKLER', 'ONERILEN_AKSIYONLAR', 'UYARI_NOTU']);
+      const checks = parseListBlock(text, 'KONTROL_EDILECEKLER', ['ONERILEN_AKSIYONLAR', 'UYARI_NOTU']);
+      const actions = parseListBlock(text, 'ONERILEN_AKSIYONLAR', ['UYARI_NOTU']);
+
+      let score = parseInt((scoreRaw.match(/\d+/) || ['0'])[0], 10);
+      if (isNaN(score)) score = 0;
+
+      document.getElementById('emptyState').style.display = 'none';
+
+      document.getElementById('scoreWrap').style.display = 'flex';
+      applyScoreUI(score, risk);
+
+      document.getElementById('summaryText').textContent = summary || 'Fotoğrafa dayalı kısa değerlendirme alınamadı.';
+      document.getElementById('summaryBlock').style.display = 'block';
+
+      document.getElementById('issuesList').innerHTML = makeListHtml(issues, '!');
+      document.getElementById('issuesBlock').style.display = 'block';
+
+      document.getElementById('checksList').innerHTML = makeListHtml(checks, '?');
+      document.getElementById('checksBlock').style.display = 'block';
+
+      document.getElementById('actionsList').innerHTML = makeListHtml(actions, '→');
+      document.getElementById('actionsBlock').style.display = 'block';
+
+      document.getElementById('warningNote').textContent = warning || 'Bu analiz fotoğrafa dayalı ön değerlendirmedir. Kesin teşhis için pH, EC, kök durumu ve gelişim evresi birlikte değerlendirilmelidir.';
+      document.getElementById('warningNote').style.display = 'block';
+
+      addHistory({
+        score: score,
+        risk: risk || 'Belirtilmedi',
+        summary: summary || 'Özet yok'
+      });
+    }
+
+    function addHistory(item) {
+      const time = new Date().toLocaleTimeString('tr-TR', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      historyArr.unshift({
+        score: item.score,
+        risk: item.risk,
+        summary: item.summary,
+        time: time
+      });
+
+      if (historyArr.length > 6) historyArr.pop();
+
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const wrap = document.getElementById('historyList');
+
+      if (!historyArr.length) {
+        wrap.innerHTML = '<div class="no-history">Henüz analiz yapılmadı</div>';
+        return;
+      }
+
+      wrap.innerHTML = historyArr.map(item => (
+        '<div class="history-item">' +
+          '<div class="history-score">' + escapeHtml(item.score) + '</div>' +
+          '<div class="history-main">' +
+            '<h4>' + escapeHtml(item.risk) + '</h4>' +
+            '<p>' + escapeHtml(item.summary) + '</p>' +
+          '</div>' +
+          '<div class="history-time">' + escapeHtml(item.time) + '</div>' +
+        '</div>'
+      )).join('');
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/ozka-bitki-analiz/sw.js').catch(function(err) {
+          console.log('Service worker kayıt hatası:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
