@@ -1,0 +1,1 @@
+# ozka-bitki-analiz
